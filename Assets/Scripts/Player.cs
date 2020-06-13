@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public GameObject groundRight;
     public GameObject groundLeft;
 
+    public float jumpForce;
     public float speed;
     void Start()
     {
@@ -43,17 +44,64 @@ public class Player : MonoBehaviour
         {
             if (onGround)
             {
-                Vector2 jumpSpeed = Vector2.up * speed;
+                jumpNow = true;
+                Vector2 jumpSpeed = Vector2.up * jumpForce;
                 rb.AddForce(jumpSpeed);
             }
         }
+
+        if (jumpNow)
+        {
+            if (thisGround == grounds.groundLeft)
+            {
+                SwitchGrounds(groundRight.transform);
+            }
+            else if (thisGround == grounds.groundRight)
+            {
+                SwitchGrounds(groundLeft.transform);
+            }
+        }
     }
-    
+
+    void SwitchGrounds(Transform target)
+    {
+        if (transform.position != target.position)
+        {
+            transform.position = Vector3.Lerp(transform.position, target.position, speed);
+        }
+
+    }
+
+    enum grounds
+    {
+        groundLeft,
+        groundRight
+    }
+
+    private grounds thisGround = grounds.groundLeft;
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.layer == 8)
+        {
+            jumpNow = false;
+        }
+    }
+
     private void OnCollisionStay2D(Collision2D other)
     {
         if (other.gameObject.layer == 8)
         {
             onGround = true;
+        }
+
+        if (other.gameObject.name == "Ground Right")
+        {
+            thisGround = grounds.groundRight;
+        }
+        else if (other.gameObject.name == "Ground Left")
+        {
+            thisGround = grounds.groundLeft;
         }
     }
 
