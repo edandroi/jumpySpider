@@ -67,6 +67,7 @@ public class Player : MonoBehaviour
 
         if (jumpNow)
         {
+            m_Net.jump_Event.Invoke();
             if (thisGround == grounds.groundLeft)
             {
                 // go right
@@ -125,6 +126,7 @@ public class Player : MonoBehaviour
         if (other.gameObject.layer == 8)
         {
             jumpNow = false;
+            m_Net.landing_Event.Invoke();
         }
     }
 

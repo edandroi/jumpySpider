@@ -17,7 +17,9 @@ public class Net : MonoBehaviour
 
     private bool drawNow = false;
 
-    UnityEvent jump_Event = new UnityEvent();
+    public UnityEvent jump_Event = new UnityEvent();
+    public UnityEvent landing_Event = new UnityEvent();
+    
 
     GameObject GameManager;
 
@@ -40,44 +42,25 @@ public class Net : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
         // Add listener to the event
         jump_Event.AddListener(UpdateLine);
+        landing_Event.AddListener(RemoveLine);
         
     }
 
     private Vector3 playerPos;
-    void Update()
-    {
-//        if (drawNow) 
-//            UpdateLine();
 
-        NetBehaviour();
-    }
-
-    public void NetBehaviour()
+    void RemoveLine()
     {
-        Debug.Log("on ground is "+ global::Player.onGround);
-        // make net if jumping
-        if (!global::Player.onGround && jump_Event != null)
-        {
-            jump_Event.Invoke();
-        }
-        else if (global::Player.onGround )
-        {
-            /*
-            StartCoroutine(RemoveNet(2));
-            */
-            linePoints.Clear();
-                
-//            Debug.Log("coroutine ended now");
-        }
+        StartCoroutine(RemoveNet(2));
+
+        linePoints.Clear();
+        lineRenderer.positionCount = 1;
+        lineRenderer.SetPosition(0,playerPos);
+        lastPos = playerPos;
     }
 
     System.Collections.IEnumerator RemoveNet(int seconds)
     {
         yield return new WaitForSeconds(seconds);
-        for (int i = 0 ; i < linePoints.Count; i++)
-        {
-            linePoints.Remove(linePoints[i]);
-        }
     }
     
     void UpdateLine()
@@ -87,11 +70,17 @@ public class Net : MonoBehaviour
         startWidth = .2f;
         endWidth = .4f;
         
+//        Debug.Log("las pos is "+ lastPos);
         float dist = Vector3.Distance(lastPos, playerPos);
         if(dist <= threshold)
             return;
          
         lastPos = playerPos;
+        
+        Debug.Log(linePoints.Count);
+        if (linePoints== null)
+            Debug.Log("no line points now");
+        
         if(linePoints == null)
             linePoints = new List<Vector3>();
         linePoints.Add(playerPos);
