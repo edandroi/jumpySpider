@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     public GameObject groundRight;
     public GameObject groundLeft;
 
+    private Platforms[] _platforms;
+    
     private Net m_Net;
     
     void Start()
@@ -32,6 +34,8 @@ public class Player : MonoBehaviour
         col = GetComponent<Collider2D>();
 
         m_Net = FindObjectOfType<Net>();
+
+        _platforms = FindObjectsOfType<Platforms>();
     }
     
     void Update()
@@ -83,7 +87,7 @@ public class Player : MonoBehaviour
     public float heightModifier = 1;
     void CalculateHeight(Transform target, Transform ground)
     {
-        float diff = Mathf.Abs(ground.position.x - target.position.x);
+        float diff = Mathf.Abs(ground.position.x - target.position.x)+ Mathf.Abs(ground.position.y - target.position.y)*.6f;
         jumpHeight = diff * heightModifier;
     }
 
@@ -120,11 +124,28 @@ public class Player : MonoBehaviour
     }
 
     private grounds thisGround = grounds.groundLeft;
-
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.layer == 8)
         {
+            if (jumpNow)
+            {
+                if (other.gameObject.name == "Ground Left")
+                {
+                    foreach (var platform in _platforms)
+                    {
+                        platform.moveRight_Event.Invoke();
+                    }
+                }else if (other.gameObject.name == "Ground Right")
+                {
+                    foreach (var platform in _platforms)
+                    {
+                        platform.moveLeft_Event.Invoke();
+                    }
+                }
+
+            }
+
             jumpNow = false;
             m_Net.landing_Event.Invoke();
         }
@@ -154,6 +175,6 @@ public class Player : MonoBehaviour
             onGround = false;
         }
     }
-    
+
 }
 
