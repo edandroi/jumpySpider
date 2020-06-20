@@ -23,11 +23,15 @@ public class Player : MonoBehaviour
 
     public GameObject groundRight;
     public GameObject groundLeft;
+
+    private Net m_Net;
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+
+        m_Net = FindObjectOfType<Net>();
     }
     
     void Update()
@@ -80,7 +84,6 @@ public class Player : MonoBehaviour
     {
         float diff = Mathf.Abs(ground.position.x - target.position.x);
         jumpHeight = diff * heightModifier;
-        Debug.Log(jumpHeight);
     }
 
     //sag x arti
