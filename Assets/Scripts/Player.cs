@@ -23,9 +23,7 @@ public class Player : MonoBehaviour
 
     public GameObject groundRight;
     public GameObject groundLeft;
-
-    public float jumpForce;
-    public float speed;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,15 +35,29 @@ public class Player : MonoBehaviour
         Jump();
     }
 
+    private float defaultJump;
     void Jump()
     {
         if (Input.GetMouseButtonDown(0))
         {
             if (onGround)
             {
+//                Debug.Log("mouse down now");
+                if (thisGround == grounds.groundLeft)
+                {
+                    // go right
+                    float remainingDistance = Mathf.Abs(transform.position.x - groundRight.transform.position.x);
+                    totalJumpTime = remainingDistance / jumpSpeed;
+                    CalculateHeight(groundRight.transform, groundLeft.transform);
+                }
+                else if (thisGround == grounds.groundRight)
+                {
+                    //go left
+                    float remainingDistance = Mathf.Abs(transform.position.x - groundLeft.transform.position.x);
+                    totalJumpTime = remainingDistance / jumpSpeed;
+                    CalculateHeight(groundLeft.transform, groundRight.transform);
+                }
                 jumpNow = true;
-                Vector2 jumpSpeed = Vector2.up * jumpForce;
-                rb.AddForce(jumpSpeed);
             }
         }
 
@@ -53,22 +65,48 @@ public class Player : MonoBehaviour
         {
             if (thisGround == grounds.groundLeft)
             {
+                // go right
                 SwitchGrounds(groundRight.transform);
             }
             else if (thisGround == grounds.groundRight)
             {
+                //go left
                 SwitchGrounds(groundLeft.transform);
             }
         }
     }
+    public float heightModifier = 1;
+    void CalculateHeight(Transform target, Transform ground)
+    {
+        float diff = Mathf.Abs(ground.position.x - target.position.x);
+        jumpHeight = diff * heightModifier;
+        Debug.Log(jumpHeight);
+    }
+
+    //sag x arti
+    // sol x eksi
+    
+    float jumpHeight;
+    public float jumpSpeed = .1f;
+    private float totalJumpTime;
 
     void SwitchGrounds(Transform target)
     {
-        if (transform.position != target.position)
-        {
-            transform.position = Vector3.Lerp(transform.position, target.position, speed);
-        }
+        float remainingDistance = Mathf.Abs(transform.position.x - target.position.x);
+        float remainingTime = remainingDistance / jumpSpeed;
 
+        transform.position = Vector3.Lerp(transform.position, target.position, jumpSpeed * Time.deltaTime);
+
+        if (remainingTime > totalJumpTime / 2)
+        {
+            transform.position = new Vector3(transform.position.x,
+                Mathf.Lerp(transform.position.y, jumpHeight, jumpSpeed * Time.deltaTime), 0);
+        }
+        else if (remainingTime > 0)
+        {
+            transform.position = new Vector3(transform.position.x,
+                Mathf.Lerp(transform.position.y, target.position.y, jumpSpeed * Time.deltaTime), 0);
+        }
     }
 
     enum grounds
@@ -111,21 +149,6 @@ public class Player : MonoBehaviour
             onGround = false;
         }
     }
+    
+}
 
-    /*
-void CheckGround()
-{
-    ContactFilter2D mFilter = new ContactFilter2D();
-    mFilter.SetLayerMask(8);
-    Debug.Log(mFilter);
-    if (Physics2D.IsTouching(col, mFilter))
-    {
-        onGround = true;
-    }
-    else
-    {
-        onGround = false;
-    }
-}
-*/
-}
