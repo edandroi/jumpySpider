@@ -28,6 +28,8 @@ public class Net : MonoBehaviour
     private GameObject Player;
  
     Vector3 lastPos = Vector3.one * float.MaxValue;
+
+    private PolygonCollider2D col;
      
      
     void Awake()
@@ -40,6 +42,8 @@ public class Net : MonoBehaviour
     {
         m_Manager = GameObject.FindObjectOfType<GameManager>().GetComponent<GameManager>();
         Player = GameObject.FindGameObjectWithTag("Player");
+        col = GetComponent<PolygonCollider2D>();
+        
         // Add listener to the event
         jump_Event.AddListener(UpdateLine);
         landing_Event.AddListener(RemoveLine);
@@ -62,7 +66,8 @@ public class Net : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
     }
-    
+
+    private List<Vector2> colPoints;
     void UpdateLine()
     {
         playerPos = Player.transform.position;
@@ -76,11 +81,7 @@ public class Net : MonoBehaviour
             return;
          
         lastPos = playerPos;
-        
-        Debug.Log(linePoints.Count);
-        if (linePoints== null)
-            Debug.Log("no line points now");
-        
+
         if(linePoints == null)
             linePoints = new List<Vector3>();
         linePoints.Add(playerPos);
@@ -93,72 +94,4 @@ public class Net : MonoBehaviour
         }
         lineCount = linePoints.Count;
     }
-    
-    /*
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        // We touch them only once
-        if (other.gameObject.CompareTag("Dot1"))
-        {
-            if (!touchDot1)
-            {
-                drawNow = !drawNow;
-                touchDot1 = true;
-            }
-        }
-
-        if (other.gameObject.CompareTag("Dot2"))
-        {
-            if (!touchDot2)
-            {
-                drawNow = !drawNow;
-                touchDot2 = true;
-            }
-        }
-
-        if (drawNow)
-        {
-            if (other.gameObject.CompareTag("Blue"))
-            {
-                startWidth += 0.05f;
-            }
-
-            if (other.gameObject.CompareTag("Orange"))
-            {
-                endWidth += 0.005f;
-            }
-            if (other.gameObject.CompareTag("Yellow"))
-            {
-                endWidth -= 0.01f;
-                startWidth -= 0.02f;
-            }
-
-            startWidth = Mathf.Clamp(startWidth,0.1f, 5f);
-            endWidth = Mathf.Clamp(endWidth,0.1f, 5f);
-            
-        }
-    }
-
-    /*
-    void ConnectDots()
-    {
-        if (touchDot1)
-        {
-                dot1 = true;
-            m_Manager.currentGameState = global::GameManager.GameStates.drawing;
-        }
-
-        if (touchDot2)
-        {
-                dot2 = true;
-            m_Manager.currentGameState = global::GameManager.GameStates.drawing;
-        }
-
-        if (dot1 && dot2)
-        {
-            m_Manager.currentGameState = global::GameManager.GameStates.end;
-        }
-    }
-    */
-
 }
