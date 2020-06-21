@@ -10,8 +10,8 @@ public class ScoreZone : MonoBehaviour
     public Transform groundRight;
     public Transform groundLeft;
     
-    UnityEvent leftAngle_Event = new UnityEvent();
-    UnityEvent rightAngle_Event = new UnityEvent();
+    public UnityEvent leftAngle_Event = new UnityEvent();
+    public UnityEvent rightAngle_Event = new UnityEvent();
     void Start()
     {
         col = GetComponent<Collider2D>();
@@ -28,13 +28,16 @@ public class ScoreZone : MonoBehaviour
     private float currentDir;
     void AngleForLeftJump()
     {
+        Debug.Log("left angle called");
         Vector2 direction = groundLeft.position - groundRight.position;
         float angle = Vector3.Angle(direction, transform.forward);
+        transform.eulerAngles = new Vector3(0,0,angle);
     }
     
     void AngleForRightJump()
     {
         Vector2 direction = groundLeft.position - groundRight.position;
         float angle = Vector3.Angle(direction, transform.forward);
+        transform.eulerAngles = new Vector3(0,0,angle);
     }
 }

@@ -47,24 +47,29 @@ public class Net : MonoBehaviour
         // Add listener to the event
         jump_Event.AddListener(UpdateLine);
         landing_Event.AddListener(RemoveLine);
-        
     }
 
     private Vector3 playerPos;
 
     void RemoveLine()
     {
-        StartCoroutine(RemoveNet(2));
+        StartCoroutine(RemoveNet(1));
 
+        /*
         linePoints.Clear();
         lineRenderer.positionCount = 1;
         lineRenderer.SetPosition(0,playerPos);
         lastPos = playerPos;
+        */
     }
 
     System.Collections.IEnumerator RemoveNet(int seconds)
     {
         yield return new WaitForSeconds(seconds);
+        linePoints.Clear();
+        lineRenderer.positionCount = 1;
+        lineRenderer.SetPosition(0,playerPos);
+//        lastPos = playerPos;
     }
 
     private List<Vector2> colPoints;
@@ -72,8 +77,8 @@ public class Net : MonoBehaviour
     {
         playerPos = Player.transform.position;
 
-        startWidth = .2f;
-        endWidth = .4f;
+        startWidth = .1f;
+        endWidth = .2f;
         
 //        Debug.Log("las pos is "+ lastPos);
         float dist = Vector3.Distance(lastPos, playerPos);

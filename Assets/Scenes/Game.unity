@@ -337,7 +337,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.4772606, g: 0.6677996, b: 0.7075472, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -724,16 +724,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7f360a9875c4f8fae245f7d218bc94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movePlatform_Event:
-    m_PersistentCalls:
-      m_Calls: []
   moveLeft_Event:
     m_PersistentCalls:
       m_Calls: []
   moveRight_Event:
     m_PersistentCalls:
       m_Calls: []
-  speed: 0.5
   thisPlatform: 1
 --- !u!1 &1591114218
 GameObject:
@@ -827,8 +823,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6f14b44013461fadc82697698ea7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundRight: {fileID: 0}
-  groundLeft: {fileID: 0}
+  groundRight: {fileID: 1353925637}
+  groundLeft: {fileID: 2138467470}
+  leftAngle_Event:
+    m_PersistentCalls:
+      m_Calls: []
+  rightAngle_Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1972083544
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,6 +875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newTargetTime: 2
+  groundSpeed: 0.1
 --- !u!1 &2138467466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,16 +1019,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7f360a9875c4f8fae245f7d218bc94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movePlatform_Event:
-    m_PersistentCalls:
-      m_Calls: []
   moveLeft_Event:
     m_PersistentCalls:
       m_Calls: []
   moveRight_Event:
     m_PersistentCalls:
       m_Calls: []
-  speed: 0.5
   thisPlatform: 0
 --- !u!1001 &5544551018523668767
 PrefabInstance:

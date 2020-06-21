@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public float newTargetTime = 5f;
     private float remainingTargetTime;
+
+    public float groundSpeed = 0.5f;
     
     void Start()
     {

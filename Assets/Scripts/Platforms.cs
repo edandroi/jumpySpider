@@ -5,12 +5,12 @@ using UnityEngine.Events;
 
 public class Platforms : MonoBehaviour
 {
-    public UnityEvent movePlatform_Event = new UnityEvent();
-    public UnityEvent moveLeft_Event = new UnityEvent();
-    public UnityEvent moveRight_Event = new UnityEvent();
+    public UnityEvent moveLeft_Event;
+    public UnityEvent moveRight_Event;
 
-    public float speed= .5f;
+    float speed;
 
+    private ScoreZone ScoreZone;
     public enum platform
     {
         left,
@@ -19,11 +19,18 @@ public class Platforms : MonoBehaviour
 
     public platform thisPlatform;
 
+    private GameManager m_Manager;
     void Start()
     {
-       movePlatform_Event.AddListener(MoveGround);
-       moveLeft_Event.AddListener(MoveLeftGround);
-       moveRight_Event.AddListener(MoveRightGround);
+        moveLeft_Event = new UnityEvent();
+        moveRight_Event = new UnityEvent();
+        moveLeft_Event.AddListener(MoveLeftGround);
+        moveRight_Event.AddListener(MoveRightGround);
+
+       m_Manager = FindObjectOfType<GameManager>();
+       speed = m_Manager.groundSpeed;
+       
+       ScoreZone = FindObjectOfType<ScoreZone>();
     }
 
     
@@ -31,9 +38,26 @@ public class Platforms : MonoBehaviour
     {
         if (moveNow)
         {
+            Debug.Log("update");
             if (transform.position.y != targetPos.y*.3f)
             {
                 transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, targetPos.y, speed), 0);
+            }
+            else
+            {
+                Debug.Log("time to evoke");
+                // hareket eden bosta kalan platform, yani orasi yeni hedef
+                if (thisPlatform == platform.left)
+                {
+//                    Debug.Log("time to evoke");
+                    ScoreZone.leftAngle_Event.Invoke();
+                }
+                if (thisPlatform == platform.right)
+                {
+                    ScoreZone.rightAngle_Event.Invoke();
+                }
+
+                moveNow = false;
             }
         }
     }
@@ -58,20 +82,6 @@ public class Platforms : MonoBehaviour
         }
     }
 
-    void MoveGround()
-    {
-        // move if I am the left one
-        if (thisPlatform == platform.left )
-        {
-            CalculateNewPos();
-            moveNow = true;
-        }
-        else if (thisPlatform == platform.right )
-        {
-            CalculateNewPos();
-            moveNow = true;
-        }
-    }
 
     private Vector3 targetPos;
     void CalculateNewPos()
